@@ -110,24 +110,19 @@ export async function askKnowledgeBase(
 
 /** Phase 1 — upload slides + transcript, get back a generated 20Q quiz */
 export async function uploadKnowledge(files: File[]): Promise<KnowledgePackage> {
-  await delay(1200);
-  const sections = ['Intro & Motivation', 'Core Mechanism', 'Worked Example', 'Edge Cases', 'Summary'];
-  return {
-    id: 'kp_' + Date.now(),
-    fileNames: files.map((f) => f.name),
-    sectionCount: sections.length,
-    quiz: Array.from({ length: 20 }).map((_, i) => {
-      const section = sections[i % sections.length];
-      return {
-        id: `q${i + 1}`,
-        sectionId: section.toLowerCase().replace(/\s+/g, '-'),
-        sectionTitle: section,
-        prompt: `Question ${i + 1}: which statement best matches "${section}"?`,
-        options: ['Option A', 'Option B', 'Option C', 'Option D'],
-        correctIndex: i % 4,
-      };
-    }),
-  };
+  const formData = new FormData();
+  files.forEach((f) => formData.append('files', f));
+
+  const response = await fetch('http://127.0.0.1:8000/api/upload/package', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Upload failed: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 /** Phase 2 — grade the quiz and diagnose weak sections */

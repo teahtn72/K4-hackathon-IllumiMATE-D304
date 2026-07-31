@@ -19,7 +19,7 @@ export default function UploadStep() {
   const hasSlides = files.some((file) => file.name.toLowerCase().endsWith('.pdf'));
   const hasTranscript = files.some((file) => {
     const name = file.name.toLowerCase();
-    return name.endsWith('.txt') || name.endsWith('.vtt') || name.endsWith('.srt');
+    return name.endsWith('.txt') || name.endsWith('.vtt') || name.endsWith('.srt') || name.endsWith('.md');
   });
   const readyToGenerate = hasSlides && hasTranscript;
 
@@ -104,7 +104,7 @@ export default function UploadStep() {
             Drop PDF slides + transcript here
           </p>
           <p className="text-soft" style={{ fontSize: 13, marginTop: 4 }}>
-            or click to browse — .pdf, .txt, .vtt
+            or click to browse — .pdf, .txt, .vtt, .md
           </p>
           <input
             ref={inputRef}
@@ -112,7 +112,7 @@ export default function UploadStep() {
             multiple
             hidden
             onChange={(e) => addFiles(e.target.files)}
-            accept=".pdf,.txt,.vtt,.srt"
+            accept=".pdf,.txt,.vtt,.srt,.md"
           />
         </div>
 
@@ -138,7 +138,7 @@ export default function UploadStep() {
             )}
             {!readyToGenerate && (
               <span className="clay-badge" style={{ color: 'var(--clay-orange-dark)' }}>
-                Import đủ 1 file slide (.pdf) và 1 file transcript (.txt, .vtt hoặc .srt) để Generate MCQ.
+                Import đủ 1 file slide (.pdf) và 1 file transcript (.txt, .vtt, .srt hoặc .md) để Generate MCQ.
               </span>
             )}
           </div>
